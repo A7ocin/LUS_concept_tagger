@@ -20,7 +20,8 @@ with open(data_file) as f:
 lines = text.split('\n')
 lines2 = text2.split('\n')
 
-wordPosLemmaConcept = []
+#wordPosLemmaConcept = []
+wordConcept = []
 words = []
 lemmas = []
 pos = []
@@ -38,33 +39,35 @@ for line, line2 in zip(lines, lines2):
 	counterWords = counterWords+1
 	parts = line.split('\t')
 	parts2 = line2.split('\t')
-	wordPosLemmaConcept.append(parts[0]+"\t"+parts[1]+"\t"+parts[2]+"\t"+parts2[1])
+	#wordPosLemmaConcept.append(parts[0]+"\t"+parts[1]+"\t"+parts[2]+"\t"+parts2[1])
+	wordConcept.append(parts[0]+"\t"+parts2[1])
 	words.append(parts[0])
-	lemmas.append(parts[2])
-	pos.append(parts[1])
+	#lemmas.append(parts[2])
+	#pos.append(parts[1])
 	concept.append(parts2[1])
 	#wordsRepetitions.append(parts[0])
 	#wordsRepetitions.append(parts2[1])
 
-counterWordPosLemmaConcept = Counter(wordPosLemmaConcept).most_common()
+#counterWordPosLemmaConcept = Counter(wordPosLemmaConcept).most_common()
+counterWordConcept = Counter(wordConcept).most_common()
 counterWord = dict(Counter(words))
-counterLemma = dict(Counter(lemmas))
-counterPos = dict(Counter(pos))
+#counterLemma = dict(Counter(lemmas))
+#counterPos = dict(Counter(pos))
 counterConcept = dict(Counter(concept))
 
 #wordsRepetitions = dict(Counter(wordsRepetitions))
 
 weights = []
 
-for wplc in counterWordPosLemmaConcept:
-	wplc, counter = wplc
-	w = wplc.split("\t")[0]
-	p = wplc.split("\t")[1]
-	l = wplc.split("\t")[2]
-	c = wplc.split("\t")[3]	
-	count_pos = counterPos[p]
+for wc in counterWordConcept:
+	wc, counter = wc
+	w = wc.split("\t")[0]
+	#p = wplc.split("\t")[1]
+	#l = wplc.split("\t")[2]
+	c = wc.split("\t")[1]	
+	#count_pos = counterPos[p]
 	count_word = counterWord[w]
-	count_lemma = counterLemma[l]
+	#count_lemma = counterLemma[l]
 	count_concept = counterConcept[c]
 	cost = -math.log(float(counter)/float(count_concept))
 	

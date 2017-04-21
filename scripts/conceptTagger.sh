@@ -43,20 +43,27 @@ if [ -f "../data/lemmaToConcept.m" ]; then
 	rm ../data/lemmaToConcept.m 
 fi
 
+if [ -f "../data/trainData" ]; then 
+	rm ../data/trainData 
+fi
+
 #Create fst and results folders
 mkdir ../fst
 mkdir ../results
 mkdir ../sentencesFst
 mkdir ../results/outputData
 
+#Pre-training
+python preTraining.py ../data/NLSPARQL.train.data
+
 #Extract sets
-	python extractSets.py ../data/NLSPARQL.train.data ../data/NLSPARQL.test.data
+python extractSets.py ../data/trainData ../data/NLSPARQL.test.data
 
 #Create lexicon
-python createLexicon.py ../data/NLSPARQL.train.feats.txt ../data/NLSPARQL.train.data
+python createLexicon.py ../data/NLSPARQL.train.feats.txt ../data/trainData
 
 #Transducer word to concept
-python wordToConcept.py ../data/NLSPARQL.train.feats.txt ../data/NLSPARQL.train.data
+python wordToConcept.py ../data/NLSPARQL.train.feats.txt ../data/trainData
 
 fstcompile --isymbols=../data/lexicon --osymbols=../data/lexicon ../data/wordToConcept.m > ../fst/wordToConcept.fst
 
@@ -89,7 +96,9 @@ awk '{print $4}' ../results/composition > ../results/results
 
 paste -d '\t' ../data/NLSPARQL.test.data ../results/results > ../results/to_evaluate_tabs
 
-sed 's/\t/ /g' ../results/to_evaluate_tabs > ../results/to_evaluate
+sed -rie 's/(O-(.)*)/O/g' ../results/to_evaluate_tabs
+
+#sed 's/\t/ /g' ../results/to_evaluate_tabs > ../results/to_evaluate
 
 output="$1 $2"
 perl ../scripts/conlleval.pl -d "\t" < ../results/to_evaluate_tabs > ../results/outputData/"${output}"

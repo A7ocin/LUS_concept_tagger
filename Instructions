@@ -2,7 +2,7 @@ From scripts folder, call
 
 bash conceptTaggerFull.sh
 
-if you want to execute the script for all methods and n-grams from order 1 to 5.
+if you want to execute the script for all methods and n-grams from order 1 to 510
 Otherwise, call
 
 bash conceptTagger.sh <method_name> <order>
@@ -16,4 +16,4 @@ kneser_ney
 presmoothed
 unsmoothed
 
-and desired n-gram order. (example: bash conceptTagger.sh absolute 5)
+and desired n-gram order. (example: bash conceptTagger.sh kneser_ney 9)
